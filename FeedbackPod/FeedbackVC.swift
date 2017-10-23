@@ -9,6 +9,7 @@
 import UIKit
 import ReachabilitySwift
 import MBProgressHUD
+import Zip
 
 
 class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -318,64 +319,86 @@ class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerControllerD
         } catch let error as NSError {
             print(error)
         }
+        
+        let file = "logger" //this is the file. we will write to and read from it
+        
+        let text = requestString //just a text
+        
+        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            
+            let fileURL = dir.appendingPathComponent(file)
+            
+            //writing
+            do {
+                try text.write(to: fileURL, atomically: false, encoding: .utf8)
+                let zipFilePath = try Zip.quickZipFiles([fileURL], fileName: "archive") // Zip
 
-        // insert data into the zip file which was blank
-        let zipdata = UFZipFile.init(fileName: zipPath, mode: ZipFileModeCreate)
-        let stream1 = zipdata?.writeInZip(withName: "logger", fileDate: Date.init(timeIntervalSinceNow: -86400.0), compressionLevel: ZipCompressionLevelDefault)
-        stream1?.write(requestString.data(using: .utf8))
-        stream1?.finishedWriting()
-        zipdata?.close()
-
-        // now create NSDATA with boundry for images if added
-        let compressed = try? Data.init(contentsOf: URL(fileURLWithPath: zipPath))
-        let boundry = "------12345"
-        let contentType = String(format: "multipart/form-data; boundary=%@", boundry)
-
-
-        if let url = URL(string: urlString) {
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.setValue(contentType, forHTTPHeaderField: "Content-Type")
-            request.timeoutInterval = TimeInterval(60.0)
-
-            var body = Data()
-            body.append(String(format: "--%@\r\n", boundry).data(using: .utf8)!)
-            body.append(String(format: "Content-Disposition: form-data; name=\"loggerRating\"; filename=\"%@\"\r\n\r\n", "logger").data(using: .utf8)!)
-            body.append(compressed!)
-            body.append(String(format: "\r\n").data(using: .utf8)!)
-
-
-            for imagePath in imagePaths {
-                let fileManagerr = FileManager.default
-                if fileManagerr.fileExists(atPath: imagePath) {
-                    let image = UIImage(contentsOfFile: imagePath)
-                    let imageData = UIImageJPEGRepresentation(image!, 1)
-
+                // now create NSDATA with boundry for images if added
+                let compressed = try? Data.init(contentsOf: zipFilePath)
+                debugPrint(compressed ?? "sdfsdfasdfdf")
+                let boundry = "------12345"
+                let contentType = String(format: "multipart/form-data; boundary=%@", boundry)
+                
+                
+                if let url = URL(string: urlString) {
+                    var request = URLRequest(url: url)
+                    request.httpMethod = "POST"
+                    request.setValue(contentType, forHTTPHeaderField: "Content-Type")
+                    request.timeoutInterval = TimeInterval(60.0)
+                    
+                    var body = Data()
                     body.append(String(format: "--%@\r\n", boundry).data(using: .utf8)!)
-                    body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"image.jpg\"\r\n", (imagePath as NSString).lastPathComponent).data(using: .utf8)!)
-                    body.append(String(format: "Content-Type: image/jpeg\r\n\r\n").data(using: .utf8)!)
-                    body.append(imageData!)
+                    body.append(String(format: "Content-Disposition: form-data; name=\"loggerRating\"; filename=\"%@\"\r\n\r\n", "logger").data(using: .utf8)!)
+                    body.append(compressed!)
                     body.append(String(format: "\r\n").data(using: .utf8)!)
-
+                    
+                    
+                    for imagePath in imagePaths {
+                        let fileManagerr = FileManager.default
+                        if fileManagerr.fileExists(atPath: imagePath) {
+                            let image = UIImage(contentsOfFile: imagePath)
+                            let imageData = UIImageJPEGRepresentation(image!, 1)
+                            
+                            body.append(String(format: "--%@\r\n", boundry).data(using: .utf8)!)
+                            body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"image.jpg\"\r\n", (imagePath as NSString).lastPathComponent).data(using: .utf8)!)
+                            body.append(String(format: "Content-Type: image/jpeg\r\n\r\n").data(using: .utf8)!)
+                            body.append(imageData!)
+                            body.append(String(format: "\r\n").data(using: .utf8)!)
+                            
+                        }
+                    }
+                    
+                    
+                    body.append(String(format: "--%@--\r\n", boundry).data(using: .utf8)!)
+                    request.httpBody = body
+                    
+                    
+                    // Make an asynchronous call so as not to hold up other processes.
+                    NSURLConnection.sendAsynchronousRequest(request, queue: OperationQueue.main, completionHandler: { (response, dataObject, error) in
+                        if let apiError = error {
+                            debugPrint(apiError)
+                        } else {
+                            debugPrint(dataObject ?? "no data")
+                            self.checkResponse(response: dataObject!)
+                        }
+                    })
+                    
                 }
             }
-
-
-            body.append(String(format: "--%@--\r\n", boundry).data(using: .utf8)!)
-            request.httpBody = body
-
-
-            // Make an asynchronous call so as not to hold up other processes.
-            NSURLConnection.sendAsynchronousRequest(request, queue: OperationQueue.main, completionHandler: { (response, dataObject, error) in
-                if let apiError = error {
-                    debugPrint(apiError)
-                } else {
-                    debugPrint(dataObject ?? "no data")
-                    self.checkResponse(response: dataObject!)
-                }
-            })
-
+            catch {/* error handling here */
+                debugPrint("In catch")
+            }
         }
+
+        
+//        // insert data into the zip file which was blank
+//        let zipdata = UFZipFile.init(fileName: zipPath, mode: ZipFileModeCreate)
+//        let stream1 = zipdata?.writeInZip(withName: "logger", fileDate: Date.init(timeIntervalSinceNow: -86400.0), compressionLevel: ZipCompressionLevelDefault)
+//        stream1?.write(requestString.data(using: .utf8))
+//        stream1?.finishedWriting()
+//        zipdata?.close()
+
+
 
     }
 

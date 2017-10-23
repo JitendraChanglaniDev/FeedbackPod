@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
 s.name             = 'FeedbackPod'
-s.version          = '1.0.3'
+s.version          = '1.0.4'
 s.summary          = 'This is pod that can be used for integrating feedback screen to your project.'
 
 # This description is used to generate tags and improve search results.
@@ -29,7 +29,7 @@ s.source           = { :git => 'https://github.com/JitendraChanglaniDev/Feedback
 # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
 s.ios.deployment_target = '8.0'
-s.source_files  = "FeedbackPod", "FeedbackPod/**/*.{h,m,swift,xib,png}"
+s.source_files  = "FeedbackPod", "FeedbackPod/**/*.{swift,xib,png}"
 
 # s.resource_bundles = {
 # 'feedbackLib' => ['feedbackLib/Assets/**/*.{png,xib}']
