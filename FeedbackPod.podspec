@@ -40,6 +40,7 @@ s.frameworks = 'UIKit'
 s.dependency 'MBProgressHUD', '~> 0.9.2'
 s.dependency 'ReachabilitySwift', '~> 3'
 s.dependency 'SDWebImage', '~>3.7'
+s.dependency 'Zip', '~> 1.0'
 
 s.pod_target_xcconfig = {
 'OTHER_LDFLAGS' => '$(inherited) -undefined dynamic_lookup -ObjC'
