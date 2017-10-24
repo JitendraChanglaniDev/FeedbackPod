@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
 s.name             = 'FeedbackPod'
-s.version          = '1.0.5'
+s.version          = '1.0.6'
 s.summary          = 'This is pod that can be used for integrating feedback screen to your project.'
 
 # This description is used to generate tags and improve search results.
@@ -37,9 +37,8 @@ s.source_files  = "FeedbackPod", "FeedbackPod/**/*.{swift,c,h,xib,png}"
 
 s.libraries = 'z'
 s.public_header_files = 'FeedbackPod/Zip/*.h'
-s.pod_target_xcconfig = {'SWIFT_INCLUDE_PATHS' => '$(SRCROOT)/FeedbackPod/Zip/Zip/minizip/**','LIBRARY_SEARCH_PATHS' => '$(SRCROOT)/FeedbackPod/FeedbackPod/'}
+s.pod_target_xcconfig = {'SWIFT_INCLUDE_PATHS' => '$(SRCROOT)/FeedbackPod/FeedbackPod/Zip/minizip/**','LIBRARY_SEARCH_PATHS' => '$(SRCROOT)/FeedbackPod/FeedbackPod/'}
 s.preserve_paths  = 'FeedbackPod/Zip/minizip/module.modulemap'
-
 s.frameworks = 'UIKit'
 s.dependency 'MBProgressHUD', '~> 0.9.2'
 s.dependency 'ReachabilitySwift', '~> 3'
