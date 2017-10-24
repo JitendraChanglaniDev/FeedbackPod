@@ -9,8 +9,6 @@
 import UIKit
 import ReachabilitySwift
 import MBProgressHUD
-import Zip
-
 
 class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
@@ -300,11 +298,11 @@ class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerControllerD
     func callMultipartRequestAPI(_ urlString: String, withImagePaths imagePaths: [String], andParameters parameters: [String: AnyObject], timeout: Int) {
 
         // get the default document Directory path
-        var paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
-        let documentsDir = paths[0]
+//        var paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
+//        let documentsDir = paths[0]
 
         // create blank zip file
-        let zipPath = documentsDir.appending("/test.zip")
+//        let zipPath = documentsDir.appending("/test333.zip")
 
 //        let fileManagerr = FileManager.default
 //        let successe = fileManagerr.fileExists(atPath: zipPath) as Bool
@@ -331,6 +329,7 @@ class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerControllerD
             //writing
             do {
                 try text.write(to: fileURL, atomically: false, encoding: .utf8)
+                
                 let zipFilePath = try Zip.quickZipFiles([fileURL], fileName: "archive") // Zip
 
                 // now create NSDATA with boundry for images if added
