@@ -10,7 +10,7 @@ import UIKit
 import ReachabilitySwift
 import MBProgressHUD
 
-class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
 
 
@@ -53,7 +53,7 @@ class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerControllerD
     @IBOutlet weak private var scrollImg: UIScrollView!
 
     // MARK:- Life cycle methods
-    override func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         self.commanInit()
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(FeedbackVC.dismissKeyboard))
@@ -181,7 +181,7 @@ class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerControllerD
 
 
     // MARK:- Text view delegate methods
-    func textViewDidChange(_ textView: UITextView) {
+    public func textViewDidChange(_ textView: UITextView) {
         self.placeholderLabel.isHidden = !textView.text.isEmpty
     }
     
@@ -218,34 +218,34 @@ class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerControllerD
         var address : String?
         
         // Get list of all interfaces on the local machine:
-//        var ifaddr : UnsafeMutablePointer<ifaddrs>?
-//        guard getifaddrs(&ifaddr) == 0 else { return nil }
-//        guard let firstAddr = ifaddr else { return nil }
-//        
-//        // For each interface ...
-//        for ifptr in sequence(first: firstAddr, next: { $0.pointee.ifa_next }) {
-//            let interface = ifptr.pointee
-//            
-//            // Check for IPv4 or IPv6 interface:
-//            let addrFamily = interface.ifa_addr.pointee.sa_family
-//            if addrFamily == UInt8(AF_INET) || addrFamily == UInt8(AF_INET6) {
-//                
-//                // Check interface name:
-//                let name = String(cString: interface.ifa_name)
-//                if  name == "en0" {
-//                    
-//                    // Convert interface address to a human readable string:
-//                    var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
-//                    getnameinfo(interface.ifa_addr, socklen_t(interface.ifa_addr.pointee.sa_len),
-//                                &hostname, socklen_t(hostname.count),
-//                                nil, socklen_t(0), NI_NUMERICHOST)
-//                    address = String(cString: hostname)
-//                }
-//            }
-//        }
-//        freeifaddrs(ifaddr)
+        var ifaddr : UnsafeMutablePointer<ifaddrs>?
+        guard getifaddrs(&ifaddr) == 0 else { return nil }
+        guard let firstAddr = ifaddr else { return nil }
         
-        return ""
+        // For each interface ...
+        for ifptr in sequence(first: firstAddr, next: { $0.pointee.ifa_next }) {
+            let interface = ifptr.pointee
+            
+            // Check for IPv4 or IPv6 interface:
+            let addrFamily = interface.ifa_addr.pointee.sa_family
+            if addrFamily == UInt8(AF_INET) || addrFamily == UInt8(AF_INET6) {
+                
+                // Check interface name:
+                let name = String(cString: interface.ifa_name)
+                if  name == "en0" {
+                    
+                    // Convert interface address to a human readable string:
+                    var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+                    getnameinfo(interface.ifa_addr, socklen_t(interface.ifa_addr.pointee.sa_len),
+                                &hostname, socklen_t(hostname.count),
+                                nil, socklen_t(0), NI_NUMERICHOST)
+                    address = String(cString: hostname)
+                }
+            }
+        }
+        freeifaddrs(ifaddr)
+        
+        return address
     }
     
     // This method returns the type of platform e.g :- X_86
@@ -437,7 +437,7 @@ class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerControllerD
 
 
     //MARK:- ImagePicker delegate methods
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
 //        CLSNSLogv("Start %@ %@ ", getVaList([NSStringFromClass(object_getClass(self)), #function]))
         let img: UIImage = info[UIImagePickerControllerOriginalImage] as! UIImage
         var imagePath = self.getDocumentDirectoryFilePath()
@@ -470,7 +470,7 @@ class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerControllerD
     }
 
     // - Delegate method called when cancel button clicked.
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
 
