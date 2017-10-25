@@ -24,8 +24,8 @@ class RatingControl: UIView {
     // MARK: Initialization
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        let filledStarImage = UIImage(named: "img_starFilled.png")
-        let emptyStarImage = UIImage(named: "img_starUnfilled.png")
+        let filledStarImage = UIImage(named: "img_starFilled.png", in: Bundle(for: RatingControl.self), compatibleWith: nil) 
+        let emptyStarImage = UIImage(named: "img_starUnfilled.png", in: Bundle(for: RatingControl.self), compatibleWith: nil)
         self.backgroundColor = UIColor.clear
         for _ in 0..<5 {
             let button = UIButton()

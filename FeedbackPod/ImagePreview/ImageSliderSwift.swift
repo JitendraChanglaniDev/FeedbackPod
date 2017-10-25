@@ -79,7 +79,7 @@ class ImageSliderSwift: UIView {
             crossImgVw.removeFromSuperview()
         }
         let crossImgView = UIImageView(frame: CGRect(x: centeredView.frame.origin.x + centeredView.frame.size.width - 12, y: centeredView.frame.origin.y - 12, width: 25, height: 25))
-        crossImgView.image = UIImage(named: "Cross_Screen.png")
+        crossImgView.image = UIImage(named: "Cross_Screen.png", in: Bundle(for: ImageSliderSwift.self), compatibleWith: nil)
         crossImgView.backgroundColor = UIColor.clear
         crossImgView.tag = 126
         mainView.addSubview(crossImgView)
@@ -122,7 +122,7 @@ class ImageSliderSwift: UIView {
             let imagePath = self.imagesArray[i] as? String
 
             if (imagePath?.contains("http"))! {
-                imageView.sd_setImage(with: URL(string: imagePath!), placeholderImage: UIImage(named: "NoImage.png"))
+                imageView.sd_setImage(with: URL(string: imagePath!), placeholderImage: UIImage(named: "NoImage.png", in: Bundle(for: ImageSliderSwift.self), compatibleWith: nil))
             }
                 else {
                 var path = self.getDocumentDirPath()

@@ -21,12 +21,7 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
     var cameraText: String!
     var galleryText: String!
 
-    private var SelectedImageIndex = 0
-    private var imagePickerController: UIImagePickerController!
 
-    private var arrayOfImagePath = [String]()
-    private var myPopImageSlider = ImageSliderSwift()
-    private let reachability: Reachability = Reachability()!
     var appName: String = ""
     var userName = ""
     var userFirstName = ""
@@ -35,9 +30,19 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
     var appID = "42"
     var appKey = "3f11a227-e31b-4bc6-beda-bd9e8a4257f5"
 
+
+
+    // private variables to the class
+    private var SelectedImageIndex = 0
+    private var imagePickerController: UIImagePickerController!
+
+    private var arrayOfImagePath = [String]()
+    private var myPopImageSlider = ImageSliderSwift()
+    private let reachability: Reachability = Reachability()!
     private let sliderMarginColor = UIColor(red: 127.0 / 255.0, green: 127.0 / 255.0, blue: 127.0 / 255.0, alpha: 1.0)
     private let sliderBgColor = UIColor(red: 10.0 / 255.0, green: 10.0 / 255.0, blue: 10.0 / 255.0, alpha: 1.0)
     private let urlString = "https://api.logcamp.net/LoggerRating"
+    private let dateFormat = "yyyy-MM-dd HH:mm:ss"
 
     // place holder label for text view which will be used for feedback
     var placeholderLabel: UILabel!
@@ -65,24 +70,25 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
      - This method helps to setup child controller.
      - If we update the below constraints we can set the Feedback as a popup.
      */
-    public func setUpTheController(parentVC: UIViewController) {
-        parentVC.addChildViewController(self)
-        self.view.translatesAutoresizingMaskIntoConstraints = false
-        parentVC.view.addSubview(self.view)
-
-        if #available(iOS 9.0, *) {
-            NSLayoutConstraint.activate([
-                self.view.leadingAnchor.constraint(equalTo: parentVC.view.leadingAnchor, constant: 0),
-                self.view.trailingAnchor.constraint(equalTo: parentVC.view.trailingAnchor, constant: 0),
-                self.view.topAnchor.constraint(equalTo: parentVC.view.topAnchor, constant: 0),
-                self.view.bottomAnchor.constraint(equalTo: parentVC.view.bottomAnchor, constant: 0)
-            ])
-        } else {
-            // Fallback on earlier versions
-
-        }
-        self.didMove(toParentViewController: parentVC)
-    }
+//    public func setUpTheController(parentVC: UIViewController) {
+//        parentVC.addChildViewController(self)
+//        self.view.translatesAutoresizingMaskIntoConstraints = false
+//        parentVC.view.addSubview(self.view)
+//
+//
+//        if #available(iOS 9.0, *) {
+//            NSLayoutConstraint.activate([
+//                self.view.leadingAnchor.constraint(equalTo: parentVC.view.leadingAnchor, constant: 0),
+//                self.view.trailingAnchor.constraint(equalTo: parentVC.view.trailingAnchor, constant: 0),
+//                self.view.topAnchor.constraint(equalTo: parentVC.view.topAnchor, constant: 0),
+//                self.view.bottomAnchor.constraint(equalTo: parentVC.view.bottomAnchor, constant: 0)
+//            ])
+//        } else {
+//            // Fallback on earlier versions
+//
+//        }
+//        self.didMove(toParentViewController: parentVC)
+//    }
 
 
     /**
@@ -158,11 +164,11 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
         }
 
         //- we need to manage that if images added to scroll view are less than 3
-        //- Then we need to allow user to add images upto 3 images.
+        //- Then we need to allow user to add upto 3 images.
         if self.arrayOfImagePath.count < 3 {
             print(self.scrollImg.frame.height)
             let imgView = UIImageView(frame: CGRect(x: xPostion, y: 0, width: imgWidth, height: imgWidth))
-            imgView.image = UIImage(named: "img_addPhoto.png")
+            imgView.image = UIImage(named: "img_addPhoto.png", in: Bundle(for: FeedbackVC.self), compatibleWith: nil)
             imgView.tag = self.arrayOfImagePath.count
             let btnForImage = UIButton(frame: imgView.frame)
             btnForImage.addTarget(self, action: #selector(self.addImageButtonClicked(_:)), for: .touchUpInside)
@@ -184,7 +190,7 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
     public func textViewDidChange(_ textView: UITextView) {
         self.placeholderLabel.isHidden = !textView.text.isEmpty
     }
-    
+
     // MARK:- Helper methods
     /**
      - This method helps to apply localized data to the labels and buttons.
@@ -203,63 +209,63 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
         alert.addAction(UIAlertAction(title: self.getLocalizedString(key: "keyOkButtonLabel", value: "OK"), style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
-    
+
     //Calls this function when the tap is recognized.
     func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
     }
-    
-    
+
+
     /**
      - This method reads the local ip address of the device and returns the same.
      */
     func getWiFiAddress() -> String? {
-//        var address : String?
-//        
-//        // Get list of all interfaces on the local machine:
-//        var ifaddr : UnsafeMutablePointer<ifaddrs>?
-//        guard getifaddrs(&ifaddr) == 0 else { return nil }
-//        guard let firstAddr = ifaddr else { return nil }
-//        
-//        // For each interface ...
-//        for ifptr in sequence(first: firstAddr, next: { $0.pointee.ifa_next }) {
-//            let interface = ifptr.pointee
-//            
-//            // Check for IPv4 or IPv6 interface:
-//            let addrFamily = interface.ifa_addr.pointee.sa_family
-//            if addrFamily == UInt8(AF_INET) || addrFamily == UInt8(AF_INET6) {
-//                
-//                // Check interface name:
-//                let name = String(cString: interface.ifa_name)
-//                if  name == "en0" {
-//                    
-//                    // Convert interface address to a human readable string:
-//                    var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
-//                    getnameinfo(interface.ifa_addr, socklen_t(interface.ifa_addr.pointee.sa_len),
-//                                &hostname, socklen_t(hostname.count),
-//                                nil, socklen_t(0), NI_NUMERICHOST)
-//                    address = String(cString: hostname)
-//                }
-//            }
-//        }
-//        freeifaddrs(ifaddr)
-        
-        return ""
+        var address : String?
+
+        // Get list of all interfaces on the local machine:
+        var ifaddr : UnsafeMutablePointer<ifaddrs>?
+        guard getifaddrs(&ifaddr) == 0 else { return nil }
+        guard let firstAddr = ifaddr else { return nil }
+
+        // For each interface ...
+        for ifptr in sequence(first: firstAddr, next: { $0.pointee.ifa_next }) {
+            let interface = ifptr.pointee
+
+            // Check for IPv4 or IPv6 interface:
+            let addrFamily = interface.ifa_addr.pointee.sa_family
+            if addrFamily == UInt8(AF_INET) || addrFamily == UInt8(AF_INET6) {
+
+                // Check interface name:
+                let name = String(cString: interface.ifa_name)
+                if  name == "en0" {
+
+                    // Convert interface address to a human readable string:
+                    var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+                    getnameinfo(interface.ifa_addr, socklen_t(interface.ifa_addr.pointee.sa_len),
+                                &hostname, socklen_t(hostname.count),
+                                nil, socklen_t(0), NI_NUMERICHOST)
+                    address = String(cString: hostname)
+                }
+            }
+        }
+        freeifaddrs(ifaddr)
+
+        return address
     }
-    
+
     // This method returns the type of platform e.g :- X_86
     func platform() -> String {
         var systemInfo = utsname()
         uname(&systemInfo)
         let size = Int(_SYS_NAMELEN) // is 32, but posix AND its init is 256....
-        
-        let s = withUnsafeMutablePointer(to: &systemInfo.machine) {p in
-            
-            p.withMemoryRebound(to: CChar.self, capacity: size, {p2 in
+
+        let s = withUnsafeMutablePointer(to: &systemInfo.machine) { p in
+
+            p.withMemoryRebound(to: CChar.self, capacity: size, { p2 in
                 return String(cString: p2)
             })
-            
+
         }
         return s
     }
@@ -289,23 +295,13 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
 //        CLSNSLogv("End %@ %@ ", getVaList([NSStringFromClass(object_getClass(self)), #function]))
     }
 
-    
+
     // MARK:- API Call methods
     /**
      - Send data to the log camp server.
      - This is multipart API call
      */
     func callMultipartRequestAPI(_ urlString: String, withImagePaths imagePaths: [String], andParameters parameters: [String: AnyObject], timeout: Int) {
-
-        // get the default document Directory path
-//        var paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
-//        let documentsDir = paths[0]
-
-        // create blank zip file
-//        let zipPath = documentsDir.appending("/test333.zip")
-
-//        let fileManagerr = FileManager.default
-//        let successe = fileManagerr.fileExists(atPath: zipPath) as Bool
 
         // create the request string
         var requestString = ""
@@ -317,19 +313,18 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
         } catch let error as NSError {
             print(error)
         }
-        
+
         let file = "logger" //this is the file. we will write to and read from it
-        
-        let text = requestString //just a text
-        
+        let text = requestString //just a request text
+
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-            
+
             let fileURL = dir.appendingPathComponent(file)
-            
+
             //writing
             do {
                 try text.write(to: fileURL, atomically: false, encoding: .utf8)
-                
+
                 let zipFilePath = try Zip.quickZipFiles([fileURL], fileName: "archive") // Zip
 
                 // now create NSDATA with boundry for images if added
@@ -337,68 +332,52 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
                 debugPrint(compressed ?? "sdfsdfasdfdf")
                 let boundry = "------12345"
                 let contentType = String(format: "multipart/form-data; boundary=%@", boundry)
-                
-                
+
                 if let url = URL(string: urlString) {
                     var request = URLRequest(url: url)
                     request.httpMethod = "POST"
                     request.setValue(contentType, forHTTPHeaderField: "Content-Type")
                     request.timeoutInterval = TimeInterval(60.0)
-                    
+
                     var body = Data()
                     body.append(String(format: "--%@\r\n", boundry).data(using: .utf8)!)
                     body.append(String(format: "Content-Disposition: form-data; name=\"loggerRating\"; filename=\"%@\"\r\n\r\n", "logger").data(using: .utf8)!)
                     body.append(compressed!)
                     body.append(String(format: "\r\n").data(using: .utf8)!)
-                    
-                    
+
                     for imagePath in imagePaths {
                         let fileManagerr = FileManager.default
                         if fileManagerr.fileExists(atPath: imagePath) {
                             let image = UIImage(contentsOfFile: imagePath)
                             let imageData = UIImageJPEGRepresentation(image!, 1)
-                            
+
                             body.append(String(format: "--%@\r\n", boundry).data(using: .utf8)!)
                             body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"image.jpg\"\r\n", (imagePath as NSString).lastPathComponent).data(using: .utf8)!)
                             body.append(String(format: "Content-Type: image/jpeg\r\n\r\n").data(using: .utf8)!)
                             body.append(imageData!)
                             body.append(String(format: "\r\n").data(using: .utf8)!)
-                            
                         }
                     }
-                    
-                    
+
                     body.append(String(format: "--%@--\r\n", boundry).data(using: .utf8)!)
                     request.httpBody = body
-                    
-                    
+
                     // Make an asynchronous call so as not to hold up other processes.
                     NSURLConnection.sendAsynchronousRequest(request, queue: OperationQueue.main, completionHandler: { (response, dataObject, error) in
                         if let apiError = error {
                             debugPrint(apiError)
-                        } else {
+                        }
+                        else {
                             debugPrint(dataObject ?? "no data")
                             self.checkResponse(response: dataObject!)
                         }
                     })
-                    
                 }
             }
-            catch {/* error handling here */
+            catch { /* error handling here */
                 debugPrint("In catch")
             }
         }
-
-        
-//        // insert data into the zip file which was blank
-//        let zipdata = UFZipFile.init(fileName: zipPath, mode: ZipFileModeCreate)
-//        let stream1 = zipdata?.writeInZip(withName: "logger", fileDate: Date.init(timeIntervalSinceNow: -86400.0), compressionLevel: ZipCompressionLevelDefault)
-//        stream1?.write(requestString.data(using: .utf8))
-//        stream1?.finishedWriting()
-//        zipdata?.close()
-
-
-
     }
 
     func checkResponse(response: Data) {
@@ -408,6 +387,7 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
             // Response parse time
             debugPrint(jsonObject!)
             let responseDict = jsonObject?.value(forKey: "response")as? NSDictionary
+           
             if responseDict?.value(forKey: "code") as? String == "200" {
                 MBProgressHUD.hide(for: self.view, animated: true)
                 let alert = UIAlertController(title: self.getLocalizedString(key: "keyThankYou", value: "Thank you"), message: self.getLocalizedString(key: "keyFeedbackSubmitted", value: "Your feedback submitted successfully"), preferredStyle: .alert)
@@ -423,7 +403,6 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
                 alert.addAction(OkAction)
                 self.present(alert, animated: true, completion: nil)
             }
-
         }
         catch let JSONError as NSError {
             debugPrint(JSONError)
@@ -434,7 +413,6 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
         let str = String(data: jsonData, encoding: .utf8)
         return str!
     }
-
 
     //MARK:- ImagePicker delegate methods
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
@@ -484,7 +462,7 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
         present(imagePickerController, animated: true, completion: nil)
     }
 
-    //MARK:- Document Directory operations
+    // MARK:- Document Directory operations
     // - This method returns the path of document application directory
     func getDocumentDirectoryFilePath() -> String {
         let folderPath = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0] as NSString
@@ -507,7 +485,6 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
 
     //MARK:- Preview Image Set up
     // - This method is used to get the preview of image selected from scroll view
-
     func initializePopImageSlider(_ imagesArray: [String]) {
         let height = self.view.bounds.size.height - 200
         let width = self.view.bounds.size.width - 20
@@ -547,18 +524,18 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
                 if ((Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) != nil) {
                     appVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String)!
                 }
-                
+
                 var timeZone: String {
                     return TimeZone.current.localizedName(for: TimeZone.current.isDaylightSavingTime() ?
-                        .daylightSaving :
+                        .daylightSaving:
                         .standard,
-                                                          locale: .current) ?? "" }
-                
+                    locale: .current) ?? "" }
+
                 let date = Date()
                 let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                formatter.dateFormat = self.dateFormat
                 let result = formatter.string(from: date)
-                
+
                 let summeryString = String(format: self.getLocalizedString(key: "keyAppFeedBack", value: "%@ App Feedback"), self.appName)
                 let dictOfMetaData = [
                     "appId": self.appID,
@@ -569,7 +546,7 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
                     "deviceModel": self.platform(),
                     "ipAddress": self.getWiFiAddress(),
                     "osVersion": UIDevice.current.systemVersion,
-                    "package":  Bundle.main.bundleIdentifier!,
+                    "package": Bundle.main.bundleIdentifier!,
                     "platform": "iOS",
                     "timeZone": timeZone,
                     "versionCode": Bundle.main.infoDictionary?["CFBundleVersion"] as? String
@@ -600,9 +577,6 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
             }
         }
     }
-    
-    
-    
 
     func actionOnPreviewImageButton(_ sender: UIButton) {
         let alertController = UIAlertController(title: self.getLocalizedString(key: "keySelectSource", value: "Select Source"), message: "", preferredStyle: .actionSheet)
