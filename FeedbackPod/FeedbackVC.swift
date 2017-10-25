@@ -17,20 +17,18 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
 
     //MARK:- Class variables
 
-    var feedbackPlaceHolderText: String!
-    var selectSourceText: String!
-    var cameraText: String!
-    var galleryText: String!
-
-
-    var appName: String = ""
-    var userName = ""
-    var userFirstName = ""
-    var userLastName = ""
-    var submitButtonColor: UIColor = .blue
-    var appID = "42"
-    var appKey = "3f11a227-e31b-4bc6-beda-bd9e8a4257f5"
-
+    private var feedbackPlaceHolderText: String!
+    private var cameraText: String!
+    
+    // parameters that are required to be passed
+    public var appName: String = ""
+    public var userName = ""
+    public var userFirstName = ""
+    public var userLastName = ""
+    public var submitButtonColor: UIColor = .blue
+    public var appID = ""
+    public var appKey = ""
+    public var langCode = "en"
 
 
     // private variables to the class
@@ -198,7 +196,12 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
      - If there is no localization then English values will be displayed.
      */
     func getLocalizedString(key: String, value: String) -> String {
-        return NSLocalizedString(key, tableName: nil, bundle: Bundle.main, value: value, comment: "")
+        let path = Bundle.main.path(forResource: self.langCode, ofType: "lproj")
+        var bundle = Bundle.main
+        if path != nil {
+            bundle = Bundle.init(path: path!)!
+        }
+        return NSLocalizedString(key, tableName: nil, bundle: bundle, value: value, comment: "")
     }
 
     /**
