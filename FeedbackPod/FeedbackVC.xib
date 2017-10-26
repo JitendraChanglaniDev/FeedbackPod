@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -150,11 +149,6 @@
                 <constraint firstAttribute="trailing" secondItem="PDV-fZ-AHR" secondAttribute="trailing" constant="25" id="xJB-X4-wCJ"/>
                 <constraint firstItem="zVE-ng-Zrt" firstAttribute="top" secondItem="PDV-fZ-AHR" secondAttribute="bottom" constant="10" id="yV8-QQ-bSh"/>
             </constraints>
-            <variation key="default">
-                <mask key="subviews">
-                    <exclude reference="1dK-FM-d0P"/>
-                </mask>
-            </variation>
             <variation key="heightClass=regular-widthClass=compact">
                 <mask key="subviews">
                     <include reference="1dK-FM-d0P"/>
