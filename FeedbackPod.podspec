@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
 s.name             = 'FeedbackPod'
-s.version          = '1.1.5'
+s.version          = '1.1.6'
 s.summary          = 'This is pod that can be used for integrating feedback screen to your project.'
 
 # This description is used to generate tags and improve search results.
@@ -36,10 +36,31 @@ s.source_files  = "FeedbackPod", "FeedbackPod/**/*.{swift,c,h,xib,png}"
 #}
 
 s.libraries = 'z'
+
 s.public_header_files = 'FeedbackPod/Zip/*.h'
+
+
 s.pod_target_xcconfig = {'SWIFT_INCLUDE_PATHS' => '$(SRCROOT)/FeedbackPod/FeedbackPod/Zip/minizip/**','LIBRARY_SEARCH_PATHS' => '$(SRCROOT)/FeedbackPod/FeedbackPod/'}
+
+
 #s.preserve_paths  = 'FeedbackPod/Zip/minizip/minzipModule.modulemap'
-s.preserve_paths  = 'FeedbackPod/Zip/minizip/*'
+#s.preserve_paths  = 'FeedbackPod/Zip/minizip/*'
+
+
+s.pod_target_xcconfig = { 'SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug][sdk=*][arch=*]' => 'DEBUG' }
+
+s.xcconfig         = { 'HEADER_SEARCH_PATHS' =>           '$(SDKROOT)/usr/include/ifaddrs.h'}
+s.preserve_paths = 'FeedbackPod/**/*'
+s.pod_target_xcconfig = {
+'SWIFT_INCLUDE_PATHS[sdk=iphoneos*]'         => '$(PODS_ROOT)/FeedbackPod/FeedbackPod/Zip/minizip/iphoneos',
+'SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]'  => '$(PODS_ROOT)/FeedbackPod/FeedbackPod/Zip/minizip/iphonesimulator',
+}
+s.prepare_command = <<-CMD
+./FeedbackPod/injectXcodePath.sh
+CMD
+
+
+
 s.frameworks = 'UIKit'
 s.dependency 'MBProgressHUD', '~> 0.9.2'
 s.dependency 'ReachabilitySwift', '~> 3'
