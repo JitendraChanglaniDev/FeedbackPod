@@ -1,6 +1,5 @@
 module minizip [system] [extern_c] {
     header "unzip.h"
     header "zip.h"
-    header "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/ifaddrs.h"
     export *
 }

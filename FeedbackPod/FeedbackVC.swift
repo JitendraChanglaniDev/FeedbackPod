@@ -9,7 +9,9 @@
 import UIKit
 import ReachabilitySwift
 import MBProgressHUD
+import ifft
 import minizip
+
 
 public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
