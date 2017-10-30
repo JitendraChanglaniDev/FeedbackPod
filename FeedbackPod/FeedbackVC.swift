@@ -9,7 +9,7 @@
 import UIKit
 import ReachabilitySwift
 import MBProgressHUD
-import ifft
+//import ifft
 import minizip
 
 
