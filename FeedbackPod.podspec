@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
 s.name             = 'FeedbackPod'
-s.version          = '1.1.11'
+s.version          = '1.1.12'
 s.summary          = 'This is pod that can be used for integrating feedback screen to your project.'
 
 # This description is used to generate tags and improve search results.
@@ -51,10 +51,10 @@ s.pod_target_xcconfig = { 'SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug][sdk
 
 s.xcconfig         = { 'HEADER_SEARCH_PATHS' =>           '$(SDKROOT)/usr/include/ifaddrs.h'}
 s.preserve_paths = 'FeedbackPod/**/*'
-s.pod_target_xcconfig = {
-'SWIFT_INCLUDE_PATHS[sdk=iphoneos*]'         => '$(PODS_ROOT)/FeedbackPod/FeedbackPod/Zip/minizip',
+#s.pod_target_xcconfig = {
+#'SWIFT_INCLUDE_PATHS[sdk=iphoneos*]'         => '$(PODS_ROOT)/FeedbackPod/FeedbackPod/Zip/minizip',
 
-}
+#}
 s.prepare_command = <<-CMD
 ./FeedbackPod/injectXcodePath.sh
 CMD
