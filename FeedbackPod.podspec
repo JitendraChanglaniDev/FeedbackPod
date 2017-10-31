@@ -36,35 +36,18 @@ s.source_files  = "FeedbackPod", "FeedbackPod/**/*.{swift,c,h,xib,png}"
 #}
 
 s.libraries = 'z'
-
 s.public_header_files = 'FeedbackPod/Zip/*.h'
-
 
 s.pod_target_xcconfig = {'SWIFT_INCLUDE_PATHS' => '$(SRCROOT)/FeedbackPod/FeedbackPod/Zip/minizip/**','LIBRARY_SEARCH_PATHS' => '$(SRCROOT)/FeedbackPod/FeedbackPod/'}
 
 
-#s.preserve_paths  = 'FeedbackPod/Zip/minizip/minzipModule.modulemap'
+s.preserve_paths  = 'FeedbackPod/Zip/minizip/module.modulemap'
 #s.preserve_paths  = 'FeedbackPod/Zip/minizip/*'
-
-
-s.pod_target_xcconfig = { 'SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug][sdk=*][arch=*]' => 'DEBUG' }
-
-s.xcconfig         = { 'HEADER_SEARCH_PATHS' =>           '$(SDKROOT)/usr/include/ifaddrs.h'}
-s.preserve_paths = 'FeedbackPod/**/*'
-#s.pod_target_xcconfig = {
-#'SWIFT_INCLUDE_PATHS[sdk=iphoneos*]'         => '$(PODS_ROOT)/FeedbackPod/FeedbackPod/Zip/minizip',
-
-#}
-s.prepare_command = <<-CMD
-./FeedbackPod/injectXcodePath.sh
-CMD
-
 
 
 s.frameworks = 'UIKit'
 s.dependency 'MBProgressHUD', '~> 0.9.2'
 s.dependency 'ReachabilitySwift', '~> 3'
 s.dependency 'SDWebImage', '~>3.7'
-
 
 end
