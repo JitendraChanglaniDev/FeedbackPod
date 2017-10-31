@@ -11,7 +11,7 @@ A Swift 3.0 framework for integrating feedback screen to your project. Simple an
 Setting up with [CocoaPods](http://cocoapods.org/?q=FeedbackPod)
 
 ```ruby
- pod 'FeedbackPod', '~> 1.1.1'
+ pod 'FeedbackPod', '~> 1.2'
 ```
 
 
