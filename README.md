@@ -11,7 +11,7 @@ A Swift 3.0 framework for integrating feedback screen to your project. Simple an
 Setting up with [CocoaPods](http://cocoapods.org/?q=FeedbackPod)
 
 ```ruby
- pod 'FeedbackPod', '~> 1.2'
+ pod 'FeedbackPod', '~> 1.2.1'
 ```
 
 
@@ -30,6 +30,7 @@ You can copy paste below code and provide the details required to integrate the 
 let bundle = Bundle(identifier: "org.cocoapods.FeedbackPod") // as need to access the Xib from other bundle
 let controller = FeedbackVC(nibName: "FeedbackVC", bundle: bundle) // get the controller object
 
+controller.appID = Constants.AppKeys.KALoggerURL // LogCamp Url
 controller.appID = Constants.AppKeys.KALoggerAppID // provide KALogger id  
 controller.appKey = Constants.AppKeys.KALoggerAppKey // provide KALogger application key
 controller.langCode = self.getSelectedLanguageTextCode() // optional if your application supports language support e.g :- "en" , "es"
@@ -51,7 +52,7 @@ controller.didMove(toParentViewController: self)
 // Do not provide below keys if your app supports only Engish language as it is by default provided
 // Feedback Screen keys
 "keyPlaceHolder"                          = "Write your review here";
-"keyHowInfoLabel"                         = "How Happy are you with VAP?";
+"keyHowInfoLabel"                         = "How Happy are you with %@?";
 "keyUserFeedback"                         = "User Feedback";
 "keyMessage"                              = "Please rate us or write something in feedback";
 "keyAppFeedBack"                          = "%@ App Feedback";
@@ -61,9 +62,9 @@ controller.didMove(toParentViewController: self)
 "keySelectSource"                         = "Select source";
 "keyDelete"                               = "Delete";
 "keyPreview"                              = "Preview";
-"keyCameraText"                               = "Camera";
+"keyCameraText"                           = "Camera";
 "keyPhotos"                               = "Photos";
-"keyFeedbackOrComment"                         = "Your Feedback/Comments";
+"keyFeedbackOrComment"                    = "Your Feedback/Comments";
 "keySubmit"                               = "Submit";
 "keyOkButtonLabel"                        = "OK";
 "keySourceNotAvailable"                   = "Source type not available";
@@ -74,4 +75,3 @@ controller.didMove(toParentViewController: self)
 
 
 ```
-Note:- Please make sure that your Xcode app is at /Application/Xcode destination.

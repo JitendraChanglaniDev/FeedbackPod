@@ -19,7 +19,7 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
 
     private var feedbackPlaceHolderText: String!
     private var cameraText: String!
-    
+
     // parameters that are required to be passed
     public var appName: String = ""
     public var userName = ""
@@ -29,6 +29,7 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
     public var appID = ""
     public var appKey = ""
     public var langCode = "en"
+    public var logCampUrl = ""
 
 
     // private variables to the class
@@ -40,7 +41,7 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
     private let reachability: Reachability = Reachability()!
     private let sliderMarginColor = UIColor(red: 127.0 / 255.0, green: 127.0 / 255.0, blue: 127.0 / 255.0, alpha: 1.0)
     private let sliderBgColor = UIColor(red: 10.0 / 255.0, green: 10.0 / 255.0, blue: 10.0 / 255.0, alpha: 1.0)
-    private let urlString = "https://api.logcamp.net/LoggerRating"
+    private let urlString = "/LoggerRating"
     private let dateFormat = "yyyy-MM-dd HH:mm:ss"
 
     // place holder label for text view which will be used for feedback
@@ -66,52 +67,25 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
 
     // MARK:- Initial setup methods
     /**
-     - This method helps to setup child controller.
-     - If we update the below constraints we can set the Feedback as a popup.
-     */
-//    public func setUpTheController(parentVC: UIViewController) {
-//        parentVC.addChildViewController(self)
-//        self.view.translatesAutoresizingMaskIntoConstraints = false
-//        parentVC.view.addSubview(self.view)
-//
-//
-//        if #available(iOS 9.0, *) {
-//            NSLayoutConstraint.activate([
-//                self.view.leadingAnchor.constraint(equalTo: parentVC.view.leadingAnchor, constant: 0),
-//                self.view.trailingAnchor.constraint(equalTo: parentVC.view.trailingAnchor, constant: 0),
-//                self.view.topAnchor.constraint(equalTo: parentVC.view.topAnchor, constant: 0),
-//                self.view.bottomAnchor.constraint(equalTo: parentVC.view.bottomAnchor, constant: 0)
-//            ])
-//        } else {
-//            // Fallback on earlier versions
-//
-//        }
-//        self.didMove(toParentViewController: parentVC)
-//    }
-
-
-    /**
      - This method will set all the default values for the view controller.
      - If localised values are not passed to view controller then it will set default for English.
      */
     func commanInit() {
 
+        // Update variables
+        self.appName = Bundle.main.infoDictionary![kCFBundleNameKey as String] as? String ?? ""
+
         // Assign values to UI
         self.lblPhotos.text = self.getLocalizedString(key: "keyPhotos", value: "Photos")
-        self.lblHowHappyYouAre.text = self.getLocalizedString(key: "keyHowInfoLabel", value: "How happy you are with this app ?")
+        self.lblHowHappyYouAre.text = String(format: self.getLocalizedString(key: "keyHowInfoLabel", value: "How Happy are you with %@ ?"), self.appName)
         self.lblFeedbackOrComment.text = self.getLocalizedString(key: "keyFeedbackOrComment", value: "Your feedback/comment")
         self.feedbackPlaceHolderText = self.getLocalizedString(key: "keyPlaceHolder", value: "Write something here")
         self.cameraText = self.getLocalizedString(key: "keyCameraText", value: "Camera")
 
-        self.btnSubmit.setTitle(self.getLocalizedString(key: "keySubmit", value: "Submit"), for: .normal)
+        self.btnSubmit.setTitle(self.getLocalizedString(key: "keySubmit", value: "SUBMIT").uppercased(), for: .normal)
         self.setThePlaceHolderForTextView(placeholderText: self.feedbackPlaceHolderText)
         self.btnSubmit.backgroundColor = submitButtonColor
-
-        // Update variables
-        self.appName = Bundle.main.infoDictionary![kCFBundleNameKey as String] as? String ?? ""
-
         self.updateImageScrollView()
-
     }
 
     /**
@@ -218,44 +192,6 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
     func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
-    }
-
-
-    /**
-     - This method reads the local ip address of the device and returns the same.
-     */
-    func getWiFiAddress() -> String? {
-        //var address : String?
-
-//        // Get list of all interfaces on the local machine:
-//        var ifaddr : UnsafeMutablePointer<ifaddrs>?
-//        guard getifaddrs(&ifaddr) == 0 else { return nil }
-//        guard let firstAddr = ifaddr else { return nil }
-//
-//        // For each interface ...
-//        for ifptr in sequence(first: firstAddr, next: { $0.pointee.ifa_next }) {
-//            let interface = ifptr.pointee
-//
-//            // Check for IPv4 or IPv6 interface:
-//            let addrFamily = interface.ifa_addr.pointee.sa_family
-//            if addrFamily == UInt8(AF_INET) || addrFamily == UInt8(AF_INET6) {
-//
-//                // Check interface name:
-//                let name = String(cString: interface.ifa_name)
-//                if  name == "en0" {
-//
-//                    // Convert interface address to a human readable string:
-//                    var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
-//                    getnameinfo(interface.ifa_addr, socklen_t(interface.ifa_addr.pointee.sa_len),
-//                                &hostname, socklen_t(hostname.count),
-//                                nil, socklen_t(0), NI_NUMERICHOST)
-//                    address = String(cString: hostname)
-//                }
-//            }
-//        }
-//        freeifaddrs(ifaddr)
-
-        return ""
     }
 
     // This method returns the type of platform e.g :- X_86
@@ -371,9 +307,9 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
                         if let apiError = error {
                             debugPrint(apiError)
                         }
-                        else {
-                            debugPrint(dataObject ?? "no data")
-                            self.checkResponse(response: dataObject!)
+                            else {
+                                debugPrint(dataObject ?? "no data")
+                                self.checkResponse(response: dataObject!)
                         }
                     })
                 }
@@ -391,7 +327,7 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
             // Response parse time
             debugPrint(jsonObject!)
             let responseDict = jsonObject?.value(forKey: "response")as? NSDictionary
-           
+
             if responseDict?.value(forKey: "code") as? String == "200" {
                 MBProgressHUD.hide(for: self.view, animated: true)
                 let alert = UIAlertController(title: self.getLocalizedString(key: "keyThankYou", value: "Thank you"), message: self.getLocalizedString(key: "keyFeedbackSubmitted", value: "Your feedback submitted successfully"), preferredStyle: .alert)
@@ -525,8 +461,8 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
                 }
 
                 var appVersion: String = ""
-                if ((Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) != nil) {
-                    appVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String)!
+                if let versionOfApp = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) {
+                    appVersion = versionOfApp
                 }
 
                 var timeZone: String {
@@ -540,6 +476,7 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
                 formatter.dateFormat = self.dateFormat
                 let result = formatter.string(from: date)
 
+                // create the request with meta data
                 let summeryString = String(format: self.getLocalizedString(key: "keyAppFeedBack", value: "%@ App Feedback"), self.appName)
                 let dictOfMetaData = [
                     "appId": self.appID,
@@ -548,7 +485,7 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
                     "device": modelIdentifier(),
                     "deviceId": UIDevice.current.identifierForVendor!.uuidString,
                     "deviceModel": self.platform(),
-                    "ipAddress": self.getWiFiAddress(),
+                    "ipAddress": "",
                     "osVersion": UIDevice.current.systemVersion,
                     "package": Bundle.main.bundleIdentifier!,
                     "platform": "iOS",
@@ -575,7 +512,8 @@ public class FeedbackVC: UIViewController, UITextViewDelegate, UIImagePickerCont
                     "appRating": dictOfApprating
                 ]
                 debugPrint(dictOfParams)
-                self.callMultipartRequestAPI(self.urlString, withImagePaths: ImageFullDirectoryPath, andParameters: dictOfParams as [String: AnyObject], timeout: 100)
+                let urlStringAPI = self.logCampUrl.appending(self.urlString)
+                self.callMultipartRequestAPI(urlStringAPI, withImagePaths: ImageFullDirectoryPath, andParameters: dictOfParams as [String: AnyObject], timeout: 100)
             } else {
                 self.displayAlertWithTitle(title: self.getLocalizedString(key: "keyNetworkError", value: "Network Error"), message: self.getLocalizedString(key: "keyNoInternet", value: "Application requires network access either through WiFi or Mobile network."))
             }
